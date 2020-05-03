@@ -1,7 +1,7 @@
 import time
 from pandarallel import pandarallel
 from text_preprocessing import preprocess_sentence
-from train_classifier import load_data
+from model_pipeline import load_data
 
 
 def test_preprocess_sentence():

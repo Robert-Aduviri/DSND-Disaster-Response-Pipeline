@@ -1,7 +1,9 @@
-import sys
+import sys, logging
 from model_pipeline import run_model_pipeline
 
 def main():
+    # TODO: use argparse to control more types of arguments, like operating
+    #       with a sample
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         run_model_pipeline(database_filepath, model_filepath)

@@ -1,4 +1,4 @@
-import re, unicodedata
+import re, unicodedata, logging
 from typing import List
 import nltk
 from nltk.corpus import stopwords, wordnet
@@ -8,6 +8,9 @@ from nltk.stem import WordNetLemmatizer
 # nltk.download('wordnet')
 # nltk.download('stopwords') 
 # nltk.download('averaged_perceptron_tagger')
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler()) # uncomment to print to stdout
 
 
 num_dict = {'1': 'one', '2': 'two', '3': 'three', 
@@ -61,3 +64,7 @@ def preprocess_sentence(text: str) -> str:
     words = remove_stopwords(words)
     text = ' '.join(words)
     return text
+
+
+def tokenize_sentence(text: str) -> List[str]:
+    return preprocess_sentence(text).split()

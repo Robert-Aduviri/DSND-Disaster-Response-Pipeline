@@ -3,6 +3,7 @@ from typing import Tuple, List
 
 import numpy as np
 import pandas as pd
+import joblib
 from pandarallel import pandarallel
 from sqlalchemy import create_engine
 
@@ -13,7 +14,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.metrics import classification_report
 from sklearn.base import ClassifierMixin
-from sklearn.externals import joblib
 
 from text_preprocessing import tokenize_sentence
 
@@ -86,9 +86,18 @@ def save_model(model: ClassifierMixin, model_filepath: str):
     # then joblib.load(model_filepath)
 
 
-def run_model_pipeline(database_filepath: str, model_filepath: str):
+def run_model_pipeline(database_filepath: str, model_filepath: str,
+                       sample: bool = False):
     logger.info('Loading data...    DATABASE: {}'.format(database_filepath))
     X, Y, category_names = load_data(database_filepath)
+    logger.info(f'{len(X)} data points read, with {len(category_names)}'
+                ' targets')
+    if sample:
+        sample_size = 1000
+        X = X.sample(sample_size, random_state=0) 
+        Y = Y.sample(sample_size, random_state=0)
+        logger.info(f'Sample applied, now only {sample_size} data points')
+
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
     
     logger.info('Building model...')

@@ -1,17 +1,25 @@
-import sys, logging
+import sys, logging, argparse
 from model_pipeline import run_model_pipeline
 
 def main():
     # TODO: use argparse to control more types of arguments, like operating
     #       with a sample
-    if len(sys.argv) == 3:
-        database_filepath, model_filepath = sys.argv[1:]
-        run_model_pipeline(database_filepath, model_filepath)
-    else:
-        print('Please provide the filepath of the disaster messages database '\
-              'as the first argument and the filepath of the pickle file to '\
-              'save the model to as the second argument. \n\nExample: python '\
-              'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
+    parser = argparse.ArgumentParser(
+        'Please provide the filepath of the disaster messages database '\
+        'as the first argument and the filepath of the pickle file to '\
+        'save the model to as the second argument. \n\nExample: python '\
+        'train_classifier.py ../data/DisasterResponse.db classifier.pkl'
+    )
+    parser.add_argument('database_filepath', type=str, 
+        help='filepath of the disaster messages database (.db)')
+    parser.add_argument('model_filepath', type=str, 
+        help='filepath of the file to save the model to (.pkl)')
+    parser.add_argument('-s', '--sample', action='store_true', 
+        help='run with only a sample of the data (1000 rows)')
+
+    args = parser.parse_args()
+    run_model_pipeline(args.database_filepath, args.model_filepath, 
+                       args.sample)
 
 
 if __name__ == '__main__':

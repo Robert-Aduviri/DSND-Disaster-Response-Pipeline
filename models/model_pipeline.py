@@ -7,7 +7,7 @@ import joblib
 from pandarallel import pandarallel
 from sqlalchemy import create_engine
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
@@ -38,8 +38,7 @@ def load_data(database_filepath: str) \
 
 def build_model() -> Pipeline:
 
-    # TODO: log params and use GridSearchCV (or RandomSearchCV)
-    # TODO: log intermediate steps of the pipeline
+    # TODO: log intermediate steps of the pipeline through wrappers
     tfidf_params = {
         'tokenizer': tokenize_sentence,
         'ngram_range': (1, 2),
@@ -63,7 +62,17 @@ def build_model() -> Pipeline:
             RandomForestClassifier(**clf_params['RandomForest'])
         ))
     ])
-    return pipeline
+
+    gridsearch_params = {
+        'text_features__tfidf__max_features': [400, 800],
+        # 'text_features__tfidf__ngram_range': [(1, 1), (1, 2)],
+        # 'classifier__estimator___n_estimators': [80, 200, 400],
+        'classifier__estimator__max_depth': [6, 30]
+    }
+    cv = GridSearchCV(pipeline, param_grid=gridsearch_params,
+                      n_jobs=-1, verbose=2, cv=5)
+
+    return cv
 
 
 def evaluate_model(

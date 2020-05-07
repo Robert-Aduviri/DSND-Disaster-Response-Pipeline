@@ -2,8 +2,6 @@ import sys, logging, argparse
 from model_pipeline import run_model_pipeline
 
 def main():
-    # TODO: use argparse to control more types of arguments, like operating
-    #       with a sample
     parser = argparse.ArgumentParser(
         'Please provide the filepath of the disaster messages database '\
         'as the first argument and the filepath of the pickle file to '\

@@ -94,8 +94,9 @@ def run_model_pipeline(database_filepath: str, model_filepath: str,
                 ' targets')
     if sample:
         sample_size = 1000
-        X = X.sample(sample_size, random_state=0) 
-        Y = Y.sample(sample_size, random_state=0)
+        np.random.seed(0)
+        idxs = np.random.choice(range(len(X)), sample_size)
+        X, Y = X.iloc[idxs], Y.iloc[idxs]        
         logger.info(f'Sample applied, now only {sample_size} data points')
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
